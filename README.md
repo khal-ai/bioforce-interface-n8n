@@ -1,6 +1,27 @@
-# Getting Started with Create React App
+# Bioforce Interface
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based interface for the Bioforce N8N automation app. This application provides a user-friendly chat interface to interact with the Bioforce AI agent, which helps create educational scenarios.
+
+## Features
+
+- Chat interface to interact with the Bioforce AI agent
+- Real-time conversation with the AI to create educational scenarios
+- Modern, responsive UI
+- Integration with N8N workflow
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- N8N instance running with the Bioforce workflow
+
+## Installation
+
+1. Clone this repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Update the API endpoint in `src/config.js` to match your N8N webhook URL
 
 ## Available Scripts
 
@@ -8,11 +29,8 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.\
+Runs the app in development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
 ### `npm test`
 
