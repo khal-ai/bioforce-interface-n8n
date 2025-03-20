@@ -47,10 +47,20 @@ const ChatInterface = () => {
       ]);
     } catch (error) {
       console.error('Error getting response:', error);
+      console.error('Error details:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        responseData: error.response?.data,
+        config: error.config
+      });
+      
+      const errorMessage = `Désolé, j'ai rencontré une erreur lors du traitement de votre demande. Erreur: ${error.message}${error.response ? ` (${error.response.status}: ${error.response.statusText})` : ''}`;
+      
       setMessages(prevMessages => [
         ...prevMessages, 
         { 
-          text: "Désolé, j'ai rencontré une erreur lors du traitement de votre demande. Veuillez réessayer.", 
+          text: errorMessage, 
           isUser: false 
         }
       ]);
