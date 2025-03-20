@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Container, Form, Button, Spinner, Image, Row, Col } from 'react-bootstrap';
-import { FaPaperPlane, FaDownload } from 'react-icons/fa';
+import { FaPaperPlane, FaGoogleDrive } from 'react-icons/fa';
 import bioforceLogoSvg from '../assets/bioforce-logo.svg';
 import ChatMessage from './ChatMessage';
 import apiService from '../services/api';
@@ -26,25 +26,25 @@ const ChatInterface = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!inputMessage.trim()) return;
-    
+
     // Add user message to chat
     const userMessage = inputMessage.trim();
     setMessages([...messages, { text: userMessage, isUser: true }]);
     setInputMessage('');
     setIsLoading(true);
-    
+
     try {
       // Send message to API
       const response = await apiService.sendMessage(userMessage);
-      
+
       // Add agent response to chat
       // The N8N webhook response might be structured differently
       // Check for different possible response structures
       const responseText = response.data?.data || response.data?.output || response.data;
       setMessages(prevMessages => [
-        ...prevMessages, 
+        ...prevMessages,
         { text: typeof responseText === 'string' ? responseText : JSON.stringify(responseText), isUser: false }
       ]);
     } catch (error) {
@@ -56,14 +56,14 @@ const ChatInterface = () => {
         responseData: error.response?.data,
         config: error.config
       });
-      
+
       const errorMessage = `Désolé, j'ai rencontré une erreur lors du traitement de votre demande. Erreur: ${error.message}${error.response ? ` (${error.response.status}: ${error.response.statusText})` : ''}`;
-      
+
       setMessages(prevMessages => [
-        ...prevMessages, 
-        { 
-          text: errorMessage, 
-          isUser: false 
+        ...prevMessages,
+        {
+          text: errorMessage,
+          isUser: false
         }
       ]);
     } finally {
@@ -75,14 +75,14 @@ const ChatInterface = () => {
   const handleDownload = async () => {
     // Get the latest non-user message (AI message)
     const latestAIMessage = [...messages].reverse().find(msg => !msg.isUser);
-    
+
     if (!latestAIMessage) {
       console.error('No AI message found to download');
       return;
     }
-    
+
     setIsDownloading(true);
-    
+
     try {
       await apiService.downloadMessage(latestAIMessage.text);
     } catch (error) {
@@ -105,25 +105,25 @@ const ChatInterface = () => {
             <p>Discutez avec l'agent pour élaborer votre scénario pédagogique</p>
           </Col>
           <Col xs="auto" className="d-flex align-items-center">
-            <Button 
-              variant="outline-danger" 
-              onClick={handleDownload} 
+            <Button
+              variant="outline-danger"
+              onClick={handleDownload}
               disabled={isDownloading || messages.length <= 1}
               className="download-button"
               title="Télécharger le dernier scénario"
             >
-              {isDownloading ? <Spinner animation="border" size="sm" /> : <FaDownload />} Télécharger
+              {isDownloading ? <Spinner animation="border" size="sm" /> : <FaGoogleDrive />} Sauvegarder
             </Button>
           </Col>
         </Row>
       </div>
-      
+
       <div className="messages-container">
         {messages.map((message, index) => (
-          <ChatMessage 
-            key={index} 
-            message={message.text} 
-            isUser={message.isUser} 
+          <ChatMessage
+            key={index}
+            message={message.text}
+            isUser={message.isUser}
           />
         ))}
         {isLoading && (
@@ -134,7 +134,7 @@ const ChatInterface = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      
+
       <Form onSubmit={handleSubmit} className="message-form">
         <Form.Group className="message-input-container">
           <Form.Control
@@ -145,9 +145,9 @@ const ChatInterface = () => {
             onChange={(e) => setInputMessage(e.target.value)}
             disabled={isLoading}
           />
-          <Button 
-            variant="danger" 
-            type="submit" 
+          <Button
+            variant="danger"
+            type="submit"
             className="send-button"
             style={{ backgroundColor: 'var(--bioforce-primary)', borderColor: 'var(--bioforce-primary)' }}
             disabled={isLoading || !inputMessage.trim()}

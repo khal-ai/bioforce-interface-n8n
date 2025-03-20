@@ -48,10 +48,10 @@ const apiService = {
     }
   },
 
-  // Download the latest AI message
+  // Send a request to generate the conversation download (without downloading to user's machine)
   downloadMessage: async (message) => {
     try {
-      console.log('Downloading message:', message);
+      console.log('Requesting conversation download:', message);
       
       const downloadEndpoint = 'http://localhost:5678/webhook-test/download-conversation';
       console.log('Download endpoint:', downloadEndpoint);
@@ -66,8 +66,8 @@ const apiService = {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
-        },
-        responseType: 'blob' // Important for handling file downloads
+        }
+        // Removed responseType: 'blob' as we're not handling file downloads anymore
       };
       
       console.log('Download request data:', requestData);
@@ -76,31 +76,13 @@ const apiService = {
       const response = await axios.post(downloadEndpoint, requestData, axiosConfig);
       
       console.log('Download response status:', response.status);
+      console.log('Download response data:', response.data);
       
-      // Create a blob URL and trigger download
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      
-      // Get filename from Content-Disposition header or use default
-      const contentDisposition = response.headers['content-disposition'];
-      let filename = 'scenario-pedagogique.pdf';
-      
-      if (contentDisposition) {
-        const filenameMatch = contentDisposition.match(/filename="(.+)"/i);
-        if (filenameMatch && filenameMatch[1]) {
-          filename = filenameMatch[1];
-        }
-      }
-      
-      link.setAttribute('download', filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // No longer downloading the file to the user's machine
       
       return response;
     } catch (error) {
-      console.error('Error downloading message:', error);
+      console.error('Error processing download request:', error);
       if (error.response) {
         console.error('Error response data:', error.response.data);
         console.error('Error response status:', error.response.status);
