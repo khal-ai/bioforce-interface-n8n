@@ -38,9 +38,12 @@ const ChatInterface = () => {
       const response = await apiService.sendMessage(userMessage);
       
       // Add agent response to chat
+      // The N8N webhook response might be structured differently
+      // Check for different possible response structures
+      const responseText = response.data?.data || response.data?.output || response.data;
       setMessages(prevMessages => [
         ...prevMessages, 
-        { text: response.data, isUser: false }
+        { text: typeof responseText === 'string' ? responseText : JSON.stringify(responseText), isUser: false }
       ]);
     } catch (error) {
       console.error('Error getting response:', error);
