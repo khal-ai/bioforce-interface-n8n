@@ -112,7 +112,15 @@ const ChatInterface = () => {
               className="download-button"
               title="Télécharger le dernier scénario"
             >
-              {isDownloading ? <Spinner animation="border" size="sm" /> : <FaGoogleDrive />} Sauvegarder
+              {isDownloading ? (
+                <>
+                  <Spinner animation="border" size="sm" /> Sauvegarde en cours
+                </>
+              ) : (
+                <>
+                  <FaGoogleDrive /> Sauvegarder
+                </>
+              )}
             </Button>
           </Col>
         </Row>
