@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Container, Form, Button, Spinner } from 'react-bootstrap';
-import { FaPaperPlane } from 'react-icons/fa';
+import { Container, Form, Button, Spinner, Image, Row, Col } from 'react-bootstrap';
+import { FaPaperPlane, FaDownload } from 'react-icons/fa';
+import bioforceLogoSvg from '../assets/bioforce-logo.svg';
 import ChatMessage from './ChatMessage';
 import apiService from '../services/api';
 import './ChatInterface.css';
@@ -11,6 +12,7 @@ const ChatInterface = () => {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const messagesEndRef = useRef(null);
 
   // Auto-scroll to bottom of messages
@@ -69,11 +71,51 @@ const ChatInterface = () => {
     }
   };
 
+  // Function to handle downloading the latest AI message
+  const handleDownload = async () => {
+    // Get the latest non-user message (AI message)
+    const latestAIMessage = [...messages].reverse().find(msg => !msg.isUser);
+    
+    if (!latestAIMessage) {
+      console.error('No AI message found to download');
+      return;
+    }
+    
+    setIsDownloading(true);
+    
+    try {
+      await apiService.downloadMessage(latestAIMessage.text);
+    } catch (error) {
+      console.error('Error downloading message:', error);
+      alert('Erreur lors du téléchargement. Veuillez réessayer.');
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <Container className="chat-container">
       <div className="chat-header">
-        <h1>Bioforce - Créateur de Scénario Pédagogique</h1>
-        <p>Discutez avec l'agent pour élaborer votre scénario pédagogique</p>
+        <div className="logo-container">
+          <Image src={bioforceLogoSvg} alt="Bioforce Logo" className="bioforce-logo" />
+        </div>
+        <Row>
+          <Col>
+            <h1>Bioforce - Créateur de Scénario Pédagogique</h1>
+            <p>Discutez avec l'agent pour élaborer votre scénario pédagogique</p>
+          </Col>
+          <Col xs="auto" className="d-flex align-items-center">
+            <Button 
+              variant="outline-danger" 
+              onClick={handleDownload} 
+              disabled={isDownloading || messages.length <= 1}
+              className="download-button"
+              title="Télécharger le dernier scénario"
+            >
+              {isDownloading ? <Spinner animation="border" size="sm" /> : <FaDownload />} Télécharger
+            </Button>
+          </Col>
+        </Row>
       </div>
       
       <div className="messages-container">
@@ -86,7 +128,7 @@ const ChatInterface = () => {
         ))}
         {isLoading && (
           <div className="loading-indicator">
-            <Spinner animation="border" variant="primary" size="sm" />
+            <Spinner animation="border" variant="danger" size="sm" style={{ color: 'var(--bioforce-primary)' }} />
             <span>L'agent réfléchit...</span>
           </div>
         )}
@@ -104,12 +146,13 @@ const ChatInterface = () => {
             disabled={isLoading}
           />
           <Button 
-            variant="primary" 
+            variant="danger" 
             type="submit" 
             className="send-button"
+            style={{ backgroundColor: 'var(--bioforce-primary)', borderColor: 'var(--bioforce-primary)' }}
             disabled={isLoading || !inputMessage.trim()}
           >
-            <FaPaperPlane />
+            <FaPaperPlane style={{ color: 'white', fill: 'white' }} size={16} />
           </Button>
         </Form.Group>
       </Form>

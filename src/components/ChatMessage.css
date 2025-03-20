@@ -6,14 +6,16 @@
 
 .user-message {
   margin-left: auto;
-  background-color: #e3f2fd;
-  border-color: #bbdefb;
+  background-color: var(--bioforce-primary-light);
+  border-color: var(--bioforce-primary);
+  color: var(--bioforce-white);
 }
 
 .agent-message {
   margin-right: auto;
   background-color: #f5f5f5;
-  border-color: #e0e0e0;
+  border-color: var(--bioforce-light-gray);
+  border-left: 3px solid var(--bioforce-primary);
 }
 
 .message-header {
@@ -21,7 +23,11 @@
   align-items: center;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #555;
+  color: var(--bioforce-primary-dark);
+}
+
+.user-message .message-header {
+  color: var(--bioforce-white);
 }
 
 .message-icon {

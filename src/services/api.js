@@ -47,6 +47,69 @@ const apiService = {
       throw error;
     }
   },
+
+  // Download the latest AI message
+  downloadMessage: async (message) => {
+    try {
+      console.log('Downloading message:', message);
+      
+      const downloadEndpoint = 'http://localhost:5678/webhook-test/download-conversation';
+      console.log('Download endpoint:', downloadEndpoint);
+      
+      // Format the request data
+      const requestData = {
+        message: message
+      };
+      
+      // Configure axios with appropriate headers
+      const axiosConfig = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        responseType: 'blob' // Important for handling file downloads
+      };
+      
+      console.log('Download request data:', requestData);
+      
+      // Make the API call
+      const response = await axios.post(downloadEndpoint, requestData, axiosConfig);
+      
+      console.log('Download response status:', response.status);
+      
+      // Create a blob URL and trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Get filename from Content-Disposition header or use default
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'scenario-pedagogique.pdf';
+      
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="(.+)"/i);
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1];
+        }
+      }
+      
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      return response;
+    } catch (error) {
+      console.error('Error downloading message:', error);
+      if (error.response) {
+        console.error('Error response data:', error.response.data);
+        console.error('Error response status:', error.response.status);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      }
+      throw error;
+    }
+  },
 };
 
 export default apiService;

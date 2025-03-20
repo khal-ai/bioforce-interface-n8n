@@ -1,6 +1,38 @@
+:root {
+  --bioforce-primary: #E74324;
+  --bioforce-primary-dark: #c53920;
+  --bioforce-primary-light: #f06c53;
+  --bioforce-text: #333333;
+  --bioforce-background: #f8f9fa;
+  --bioforce-light-gray: #e0e0e0;
+  --bioforce-white: #ffffff;
+}
+
 body {
-  background-color: #f8f9fa;
+  background-color: var(--bioforce-background);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--bioforce-text);
+}
+
+/* Override Bootstrap button colors */
+.btn-primary {
+  background-color: var(--bioforce-primary) !important;
+  border-color: var(--bioforce-primary) !important;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+  background-color: var(--bioforce-primary-dark) !important;
+  border-color: var(--bioforce-primary-dark) !important;
+}
+
+.btn-danger {
+  background-color: var(--bioforce-primary) !important;
+  border-color: var(--bioforce-primary) !important;
+}
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active {
+  background-color: var(--bioforce-primary-dark) !important;
+  border-color: var(--bioforce-primary-dark) !important;
 }
 
 .App {
